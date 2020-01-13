@@ -1,0 +1,43 @@
+<div style="width: 95%;margin:3px;">
+<span style="font-weight:bold;"> Total Value: {{MktTotl  + portfolio.cashbalance | number:'.0-2'}} Cash Balance: {{ portfolio.cashbalance | number:'.0-2'}} </span>
+  <table style="width:99%;margin:auto;border:solid 1px">
+  <tr style="width:100%;font-weight:bold;">
+  <td>Name</td>
+  <td>{{TotCost |  number:'.0-2'}}</td>
+  <td>{{TotGL | number:'.0-2'}}</td>
+   <td>Shares</td>
+   <td>Div.%</td>
+   <td>Price</td><td>{{MktTotl  | number:'.0-2'}}</td>
+  <td [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</td>
+  </tr>
+      <tr *ngFor="let pos of positions"
+        [ngClass]="{'redbg': pos.shares * pos.latestInfo.change < 0, 'greenbg': pos.shares * pos.latestInfo.change > 0}">
+          <td>{{pos.latestInfo.company_name}} ({{pos.symbol}})</td>
+          <td>{{pos.totCost | number:'.0-2'}}</td>
+           <td [ngClass]="{'redtext': pos.latestInfo.cur_price * pos.shares - pos.totCost < 0, 'greentext':  pos.latestInfo.cur_price * pos.shares - pos.totCost > 0}">
+           {{ pos.latestInfo.cur_price * pos.shares - pos.totCost | number:'.0-2'}}  (  {{ 100 * (( pos.latestInfo.cur_price * pos.shares - pos.totCost)/ pos.totCost) | number:'.0-2'}}  %) </td>
+          <td>{{pos.shares | number:'.0-2'}}</td>
+          <td>{{pos.latestInfo.dividendyield*100 | number:'.0-2'}}</td>
+          <td>{{pos.latestInfo.cur_price | number:'.0-2'}} 
+                  <span [ngClass]="{'redtext': pos.latestInfo.changePer < 0, 'greentext': pos.latestInfo.changePer > 0}">( {{pos.latestInfo.changePer | number:'.0-2'}} )</span>
+          </td>
+          <td>{{pos.latestInfo.cur_price * pos.shares  | number:'.0-2'}}</td>
+          <td [ngClass]="{'redtext': pos.shares * pos.latestInfo.change < 0, 'greentext':  pos.shares * pos.latestInfo.change > 0}">
+          {{ pos.shares * pos.latestInfo.change | number:'.0-2'}}</td>
+      </tr>
+    <tr style="width:100%;font-weight:bold;">
+    <td>Name</td>
+    <td>Cost</td>
+    <td>Tot GL</td>
+    <td>Shares</td>
+    <td>Div.%</td>
+    <td>Price</td>
+    <td>{{MktTotl  | number:'.0-2'}}</td>
+    <td [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</td>
+  </tr>
+   </table>
+  <app-add-transaction [pid]="pid" (portfolioUpdated)='updatePortfolio($event)'></app-add-transaction>
+
+
+<div id="chartContainer" style="height: 370px; width: 100%; margin-left:auto;margin-right:auto;"></div>
+</div>

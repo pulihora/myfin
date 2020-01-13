@@ -1,0 +1,18 @@
+
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Symbol" [(ngModel)]="symbol"  />    
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+   <input matInput placeholder="Quantity" [(ngModel)]="quantity" /> 
+   </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Date" [(ngModel)]="tDate" /> 
+     </mat-form-field>
+     <mat-form-field class="example-full-width">
+    <input matInput placeholder="Price" [(ngModel)]="price" /> 
+     </mat-form-field>
+      <mat-form-field class="example-full-width">
+    <input matInput placeholder="Type" [(ngModel)]="transType" /> 
+     </mat-form-field>
+      <button mat-button color="primary" (click)="AddTrans()">Add</button>
+
