@@ -1,5 +1,6 @@
 interface Portfolio {
   pid: string;
+  pname: string;
   transactions: Transaction[];
   cashbalance: number;
 }

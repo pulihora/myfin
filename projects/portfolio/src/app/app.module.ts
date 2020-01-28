@@ -12,13 +12,15 @@ import { RealtimeComponent } from './watchlist/realtime.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AddTransactionComponent } from './watchlist/add-transaction.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CreateportfolioComponent } from './watchlist/createportfolio.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WatchlistComponent,
     RealtimeComponent,
-    AddTransactionComponent
+    AddTransactionComponent,
+    CreateportfolioComponent
   ],
   imports: [
     BrowserModule,
