@@ -25,6 +25,7 @@ import { UserService } from './services/user.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AuthService } from './services/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { HeaderComponent } from './components/header/header.component';
 
 export function getAuthServiceConfigs() {
   const config = new AuthServiceConfig(
@@ -44,7 +45,8 @@ export function getAuthServiceConfigs() {
     RealtimeComponent,
     AddTransactionComponent,
     CreateportfolioComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

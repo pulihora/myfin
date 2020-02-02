@@ -22,8 +22,5 @@ export class AppComponent implements OnInit {
       this.FullName = this.authService.getUserInfo();
     }
   }
-  logOut(){
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+  
 }

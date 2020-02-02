@@ -34,10 +34,7 @@ export class AuthService {
   }
   public getUserInfo():any{
     const decoded = jwt_decode(this.getToken());
-    var fullName ='';
-    if (decoded.given_name === undefined && decoded.family_name === undefined) return null;
-    fullName = decoded.given_name + ', '+ decoded.family_name;
-    return fullName;
+    return decoded;
   }
   public isAuthenticated(): boolean {
     // Check whether the id_token is expired or not

@@ -1,0 +1,8 @@
+
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span *ngIf="isAuthenticated">{{FullName | titlecase }}</span>&nbsp;
+      <span class="example-spacer"></span>
+      <span *ngIf="isAuthenticated" (click)="logOut()" style="cursor: pointer;">Logout</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
