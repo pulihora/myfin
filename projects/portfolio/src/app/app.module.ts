@@ -22,6 +22,9 @@ import { CreateportfolioComponent } from './watchlist/createportfolio.component'
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthAPIService } from './services/auth-api.service';
 import { UserService } from './services/user.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { AuthService } from './services/auth.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 export function getAuthServiceConfigs() {
   const config = new AuthServiceConfig(
@@ -54,7 +57,7 @@ export function getAuthServiceConfigs() {
     NgxChartsModule,
     ServicesModule.forRoot()
   ],
-  providers: [AuthAPIService, UserService,{
+  providers: [AuthAPIService, UserService, AuthGuardService, AuthService,JwtHelperService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
     }],

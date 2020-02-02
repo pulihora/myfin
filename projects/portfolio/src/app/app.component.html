@@ -1,6 +1,7 @@
 <mat-toolbar color="primary" style="min-height:30px;max-height: 30px;">
   <mat-toolbar-row>
-    <span>Portfolio</span>
+    <span *ngIf="isAuthenticated">{{FullName}}</span>&nbsp;
+    <span *ngIf="isAuthenticated" (click)="logOut()">Logout</span>
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>

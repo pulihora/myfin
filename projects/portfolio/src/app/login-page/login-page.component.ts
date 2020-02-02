@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AuthService,
+  AuthService as SocialAuthService,
   FacebookLoginProvider,
   GoogleLoginProvider
 } from 'angular-6-social-login';
 import { AuthAPIService } from '../services/auth-api.service';
 import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -20,12 +22,16 @@ export class LoginPageComponent implements OnInit {
     provider: '',
     provider_id: '',
     provider_pic: '',
-    token: ''
+    token: '',
+    idToken: ''
   };
 
-  constructor(private socialAuthService: AuthService,
+  constructor(private socialAuthService: SocialAuthService,
+    private authService: AuthService,
     public authAPIService: AuthAPIService,
-    public user: UserService) {
+    public user: UserService,
+    private router:Router
+    ) {
     this.user.sessionIn();
   }
 
@@ -45,24 +51,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   apiConnection(data) {
-    console.log(data);
-    this.userPostData.email = data.email;
-    this.userPostData.name = data.name;
-    this.userPostData.provider = data.provider;
-    this.userPostData.provider_id = data.id;
-    this.userPostData.provider_pic = data.image;
-    this.userPostData.token = data.token;
-
-    this.authAPIService.postData(this.userPostData, 'signup').then(
-      result => {
-        this.responseData = result;
-        if (this.responseData.userData) {
-          this.user.storeData(this.responseData.userData);
-        }
-      },
-      err => {
-        console.log('error');
-      }
-    );
+    this.authService.setToken(data.idToken);
+    this.router.navigate(['/home']);
   }
 }
