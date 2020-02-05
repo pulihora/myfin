@@ -17,6 +17,23 @@ export class PortfolioService {
       , 'collection-id': '5e2670075df6407208392a38'
     };
   }
+  getUserCollectionId(uid: string): any{
+    return this.http.post<any>('https://userportfolio.azurewebsites.net/api/GetUserCollectionId?code=uhggnfyOftXrBnargecyMzLTa1eAD1dqaAlgQPBUcyhRJXmmVI62Dg==', 
+      {"userid": uid}
+    );
+  }
+  addUserToCollection(uid:string, cid:string): any{
+    return this.http.post<any>('https://userportfolio.azurewebsites.net/api/AddUserCollectionMapping?code=w7s/e7sthPgZaB1yR9gpsCsdaF6DHvEHa6wcLSNBksaiA1NgyKsssA==', 
+      {"uid": uid , "cid" : cid}
+    );
+  }
+  CreateNewCollection(id: string): any{
+    console.log(id);
+    const headers = this.getHeaders();
+    return this.http.post<any>('https://api.jsonbin.io/c', 
+    {"name": id}
+    , { headers });
+  }
   CreatePortfolio(pname: string):any {
     const headers = this.getHeaders();
     return this.http.post<any>('https://api.jsonbin.io/b', 
