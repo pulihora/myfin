@@ -22,6 +22,7 @@ export class AuthService {
   }
   logout(): void {
     localStorage.removeItem(TOKEN_NAME);
+    localStorage.clear();
   }
   getTokenExpirationDate(token: string): Date {
     const decoded = jwt_decode(token);

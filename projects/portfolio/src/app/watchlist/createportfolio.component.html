@@ -4,3 +4,7 @@
  <span>{{CurrentStatus}}</span>
  <br>
  <button mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
+ <ul>
+     <li  *ngFor="let p of portfolios">
+        {{ p.id }}</li>
+ </ul>

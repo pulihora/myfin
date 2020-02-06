@@ -7,14 +7,18 @@ import { HttpClient } from '@angular/common/http';
 export class PortfolioService {
 
   constructor(private http: HttpClient) { }
-  // 5e2670075df6407208392a38 -- dev
-  // 5e267168b236b871b365a227 -- stag
-  // 5e2671828d761771cc94a744 -- prod
-  getHeaders() {
+  private getHeaders() {
+      return {
+        'Content-type': 'application/json'
+        , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
+      };
+  }
+  private getHeadersWithCidName(cid: string, bname: string) {
     return {
       'Content-type': 'application/json'
       , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
-      , 'collection-id': '5e2670075df6407208392a38'
+      , 'collection-id': cid
+      , 'name' : bname
     };
   }
   getUserCollectionId(uid: string): any{
@@ -34,13 +38,17 @@ export class PortfolioService {
     {"name": id}
     , { headers });
   }
-  CreatePortfolio(pname: string):any {
-    const headers = this.getHeaders();
+  CreatePortfolio(pname: string, cid:string):any {
+    const headers = this.getHeadersWithCidName(cid, pname);
     return this.http.post<any>('https://api.jsonbin.io/b', 
     {"pname": pname,"pid":"pxxx","transactions":[],"cashbalance":0}
     , { headers });
   }
-
+  GetAllPortfolios( cid:string){
+    const headers = this.getHeaders();
+    return this.http.get<any>('https://api.jsonbin.io/e/collection/'+cid+'/all-bins'
+    , { headers });
+  }
   getPortfolio(portfolioId: string): Portfolio {
     return JSON.parse(localStorage.getItem('portfolio.' + portfolioId));
   }
