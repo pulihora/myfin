@@ -1,4 +1,5 @@
 interface Portfolio {
+  uid: string;
   pid: string;
   pname: string;
   transactions: Transaction[];
@@ -9,7 +10,7 @@ interface StockPosition {
   shares: number;
   avgCost: number;
   totCost: number;
-  latestInfo : Stock;
+  latestInfo: Stock;
 }
 
 interface Transaction {

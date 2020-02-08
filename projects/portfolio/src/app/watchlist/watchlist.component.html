@@ -1,5 +1,5 @@
 <div style="width: 95%;margin:3px;">
-<span style="font-weight:bold;"> Total Value: {{MktTotl  + portfolio.cashbalance | number:'.0-2'}} Cash Balance: {{ portfolio.cashbalance | number:'.0-2'}} </span>
+<span style="font-weight:bold;"> Total Value: {{MktTotl  + portfolio?.cashbalance | number:'.0-2'}} Cash Balance: {{ portfolio?.cashbalance | number:'.0-2'}} </span>
   <table style="width:99%;margin:auto;border:solid 1px">
   <tr style="width:100%;font-weight:bold;">
   <td>Name</td>
@@ -18,7 +18,7 @@
            {{ pos.latestInfo.cur_price * pos.shares - pos.totCost | number:'.0-2'}}  (  {{ 100 * (( pos.latestInfo.cur_price * pos.shares - pos.totCost)/ pos.totCost) | number:'.0-2'}}  %) </td>
           <td>{{pos.shares | number:'.0-2'}}</td>
           <td>{{pos.latestInfo.dividendyield*100 | number:'.0-2'}}</td>
-          <td>{{pos.latestInfo.cur_price | number:'.0-2'}} 
+          <td>{{pos.latestInfo.cur_price | number:'.0-2'}}
                   <span [ngClass]="{'redtext': pos.latestInfo.changePer < 0, 'greentext': pos.latestInfo.changePer > 0}">( {{pos.latestInfo.changePer | number:'.0-2'}} )</span>
           </td>
           <td>{{pos.latestInfo.cur_price * pos.shares  | number:'.0-2'}}</td>

@@ -16,6 +16,7 @@ export class CreateportfolioComponent implements OnInit {
   portfolios: any[] = null;
   enableAdd = false;
   portfolioUrl = '';
+  portfolioName = '';
   ngOnInit() {
     const usrInfo = this.authService.getUserInfo();
 
@@ -44,10 +45,10 @@ export class CreateportfolioComponent implements OnInit {
   }
   CreatePortfolio() {
     const usrInfo = this.authService.getUserInfo();
-    this.pSrv.CreatePortfolio('test', usrInfo.email).subscribe(data => {
+    this.pSrv.CreatePortfolio(this.portfolioName, usrInfo.email).subscribe(data => {
       // save to portfolioUrl
       this.pSrv.LoadPortfolios(this.portfolioUrl).subscribe(pData => {
-        pData.portfolios.push( { name: 'test', pUrl: data.uri});
+        pData.portfolios.push( { name: this.portfolioName, pUrl: data.uri});
         console.log(pData);
         this.pSrv.UpdateProfile(pData, this.portfolioUrl).subscribe(profileData => { console.log(profileData); });
       });

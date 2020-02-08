@@ -1,7 +1,9 @@
 
-<button *ngIf="enableAdd" mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
+ <br/>
+ <input matInput placeholder="Portfolio Name" [(ngModel)]="portfolioName"  />
+ <button *ngIf="enableAdd" mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
 <ul>
   <li *ngFor="let p of portfolios">
-    <a [routerLink]="['/portfolio', p.pUrl]">{{ p.name }}</a>
+    <a [routerLink]="['/portfolio', p.pUrl.replace('https://api.myjson.com/bins/','')]">{{ p.name }}</a>
   </li>
 </ul>

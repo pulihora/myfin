@@ -14,16 +14,15 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
-    if(this.isAuthenticated)
-    {
-      this.FullName ='';
+    if (this.isAuthenticated) {
+      this.FullName = '';
       const userInfo = this.authService.getUserInfo();
       if (!(userInfo.given_name === undefined && userInfo.family_name === undefined)) {
-        this.FullName = userInfo.given_name + ', '+ userInfo.family_name;
+        this.FullName = userInfo.given_name + ', ' + userInfo.family_name;
       }
     }
   }
-  logOut(){
+  logOut() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }

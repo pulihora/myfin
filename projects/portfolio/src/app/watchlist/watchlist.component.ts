@@ -14,7 +14,7 @@ import * as CanvasJS from '../../assets/canvasjs.min';
 })
 export class WatchlistComponent implements OnInit {
   dataPoints: any;
-  dpsLength: number = 0;
+  dpsLength = 0;
   chart: any;
   stocks: Observable<Stock[]>;
   portfolio: Portfolio;
@@ -50,15 +50,17 @@ export class WatchlistComponent implements OnInit {
     });
 
     this.sub = this.route.params.subscribe(params => {
-      this.pid = params['pid'];
-      this.portfolio = this.portfolioSrv.getPortfolio(this.pid);
-
-      this.positions = this.portfolioSrv.getCurrentPositions(this.pid);
-      this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
-      this.stockService.getStocks().subscribe(stocks => {
-        this.updateStockInfo(stocks);
+      this.pid = params.pid;
+      this.portfolioSrv.getPortfolio(this.pid).subscribe(portfolioData => {
+        console.log(portfolioData);
+        this.portfolio = portfolioData;
+        this.positions = this.portfolioSrv.getCurrentPositions(portfolioData);
+        this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
+        this.stockService.getStocks().subscribe(stocks => {
+          this.updateStockInfo(stocks);
+        });
+        this.stockService.startBOT();
       });
-      this.stockService.startBOT();
     });
   }
 
@@ -67,10 +69,11 @@ export class WatchlistComponent implements OnInit {
     this.chart.render();
   }
   getMin(a) {
-    var min = a[0][0][1];
-    for (var i = 0; i < a[0].length; i++) {
-      if (a[0][i][1] < min)
-        min = a[0][i][1];
+    let min = a[0][0][1];
+    for (const e of a[0]) {
+      if (e[1] < min) {
+        min = e[1];
+      }
     }
     return min;
   }
@@ -86,7 +89,7 @@ export class WatchlistComponent implements OnInit {
       this.TotGL += pos.latestInfo.cur_price * pos.shares - pos.totCost;
       this.TotCost += pos.totCost;
     });
-    var date = new Date();
+    const date = new Date();
     this.dataPoints.push({
       x: new Date(date.setMonth(date.getMonth() + 8)),
       y: (this.MktTotl + this.portfolio.cashbalance)
@@ -95,7 +98,7 @@ export class WatchlistComponent implements OnInit {
     this.updateChart();
 
 
-    this.positions.sort( (a, b) => a.shares * a.latestInfo.change - b.shares * b.latestInfo.change);
+    this.positions.sort((a, b) => a.shares * a.latestInfo.change - b.shares * b.latestInfo.change);
     // this.positions.sort( function(a, b){return a.latestInfo.cur_price * a.shares - b.latestInfo.cur_price * b.shares} )
     // this.positions.sort( function(a, b){return (( a.latestInfo.cur_price * a.shares - a.totCost)/ a.totCost) -
     // (( b.latestInfo.cur_price * b.shares - b.totCost)/ b.totCost)  });
