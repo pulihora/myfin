@@ -14,53 +14,43 @@ export class CreateportfolioComponent implements OnInit {
   constructor(private http: HttpClient, private pSrv: PortfolioService, private authService: AuthService) { }
   CurrentStatus = '';
   portfolios: any[] = null;
+  enableAdd = false;
+  portfolioUrl = '';
   ngOnInit() {
     const usrInfo = this.authService.getUserInfo();
 
     this.pSrv.getPortfolioUrl(usrInfo.email).subscribe(data => {
-      console.log(data); // load portfolio from data.url
+      this.portfolioUrl = data.portfolio_url;
+      console.log(data); // load portfolio from data.uri
+      this.LoadPortfolios(data.portfolio_url);
     }, err => {
-       this.pSrv.InitUser(usrInfo.email).subscribe(data => {
-        console.log(data.uri); // created portfolio list bin , update user mapping
-        this.pSrv.AddUserMapping(usrInfo.email, data.uri).subscribe(addUsrMapData => { console.log(addUsrMapData); });
+      this.pSrv.InitUser(usrInfo.email).subscribe(initData => {
+        this.portfolioUrl = initData.uri;
+        console.log(initData.uri); // created portfolio list bin , update user mapping
+        this.pSrv.AddUserMapping(usrInfo.email, initData.uri).subscribe(addUsrMapData => {
+          console.log(addUsrMapData);
+          this.LoadPortfolios(initData.uri);
+        });
       });
     }
     );
-
-    // const usrCid = JSON.parse(localStorage.getItem('usercid'));
-    // if (usrCid && usrCid.uid && usrCid.uid === usrInfo.email && usrCid.cid) {
-    //   this.CurrentStatus = usrCid.cid;
-    //   this.GetAllPortfolios(usrCid.cid);
-    // } else {
-    //   this.pSrv.getUserCollectionId(usrInfo.email).subscribe(data => {
-    //     this.CurrentStatus = data.cid;
-    //     localStorage.setItem('usercid', JSON.stringify(data));
-    //     this.GetAllPortfolios(data.cid);
-    //   }, err => {
-    //     if (err.status === 404) {
-    //       this.CreateNewCollection(usrInfo.email);
-    //     }
-    //   });
-    // }
   }
-  // CreateNewCollection(email: string) {
-  //   this.pSrv.CreateNewCollection(email).subscribe(data => {
-  //     if (data.success) {
-  //       this.pSrv.addUserToCollection(email, data.id).subscribe(data => {
-  //         this.CurrentStatus = data.id;
-  //       });
-  //     }
-  //   });
-  // }
-  // GetAllPortfolios(cid: string) {
-  //   this.pSrv.GetAllPortfolios(cid).subscribe(res => {
-  //     this.portfolios = res.records;
-  //   });
-  // }
-  // CreatePortfolio() {
-  //   const usrCid = JSON.parse(localStorage.getItem('usercid'));
-  //   this.pSrv.CreatePortfolio('test', usrCid.cid).subscribe(data => {
-  //     console.log(data);
-  //   });
-  // }
+  LoadPortfolios(portfolioUri: string) {
+    this.pSrv.LoadPortfolios(portfolioUri).subscribe(pData => {
+      this.enableAdd = true;
+      this.portfolios = pData.portfolios;
+      console.log(pData);
+    });
+  }
+  CreatePortfolio() {
+    const usrInfo = this.authService.getUserInfo();
+    this.pSrv.CreatePortfolio('test', usrInfo.email).subscribe(data => {
+      // save to portfolioUrl
+      this.pSrv.LoadPortfolios(this.portfolioUrl).subscribe(pData => {
+        pData.portfolios.push( { name: 'test', pUrl: data.uri});
+        console.log(pData);
+        this.pSrv.UpdateProfile(pData, this.portfolioUrl).subscribe(profileData => { console.log(profileData); });
+      });
+    });
+   }
 }

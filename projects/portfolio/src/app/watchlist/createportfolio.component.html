@@ -1,9 +1,7 @@
-<br>
-&nbsp;<span>{{CurrentStatus}}</span>
-<br>
-<button mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
+
+<button *ngIf="enableAdd" mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
 <ul>
   <li *ngFor="let p of portfolios">
-    <a [routerLink]="['/portfolio', p.id]">{{ p.id }}</a>
+    <a [routerLink]="['/portfolio', p.pUrl]">{{ p.name }}</a>
   </li>
 </ul>
