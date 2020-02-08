@@ -1,10 +1,9 @@
- 
- <br>
- <br>
- <span>{{CurrentStatus}}</span>
- <br>
- <button mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
- <ul>
-     <li  *ngFor="let p of portfolios">
-        {{ p.id }}</li>
- </ul>
+<br>
+&nbsp;<span>{{CurrentStatus}}</span>
+<br>
+<button mat-button color="primary" (click)="CreatePortfolio()">Create New Portfolio</button>
+<ul>
+  <li *ngFor="let p of portfolios">
+    <a [routerLink]="['/portfolio', p.id]">{{ p.id }}</a>
+  </li>
+</ul>

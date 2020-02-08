@@ -7,48 +7,71 @@ import { HttpClient } from '@angular/common/http';
 export class PortfolioService {
 
   constructor(private http: HttpClient) { }
-  private getHeaders() {
-      return {
-        'Content-type': 'application/json'
-        , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
-      };
-  }
-  private getHeadersWithCidName(cid: string, bname: string) {
-    return {
-      'Content-type': 'application/json'
-      , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
-      , 'collection-id': cid
-      , 'name' : bname
-    };
-  }
-  getUserCollectionId(uid: string): any{
-    return this.http.post<any>('https://userportfolio.azurewebsites.net/api/GetUserCollectionId?code=uhggnfyOftXrBnargecyMzLTa1eAD1dqaAlgQPBUcyhRJXmmVI62Dg==', 
-      {"userid": uid}
+
+  getPortfolioUrl(uid: string) {
+    return this.http.post<any>(
+      'https://userportfolio.azurewebsites.net/api/GetMyPortfoliosUrl?code=wE7l3brjnAuqTa53qikh/U6aq7Q0nf9Sdd2Ia510vgbBIsTHyvcimA==',
+      { uid }
     );
   }
-  addUserToCollection(uid:string, cid:string): any{
-    return this.http.post<any>('https://userportfolio.azurewebsites.net/api/AddUserCollectionMapping?code=w7s/e7sthPgZaB1yR9gpsCsdaF6DHvEHa6wcLSNBksaiA1NgyKsssA==', 
-      {"uid": uid , "cid" : cid}
+
+  InitUser(uid: string) {
+    return this.http.post<any>('https://api.myjson.com/bins',
+    { uid, portfolios : []  }
+  );
+  }
+
+  AddUserMapping(uid: string, portfolioUrl: string) {
+    return this.http.post<any>(
+      'https://userportfolio.azurewebsites.net/api/AddUserPortfolioUrl?code=uCVb5ZlaFBuIGKGCjskNKN3auW7DiZXWcV5RxsAkcie6sHnIOSZBsQ==',
+      { uid, portfolio_url : portfolioUrl }
     );
   }
-  CreateNewCollection(id: string): any{
-    console.log(id);
-    const headers = this.getHeaders();
-    return this.http.post<any>('https://api.jsonbin.io/c', 
-    {"name": id}
-    , { headers });
-  }
-  CreatePortfolio(pname: string, cid:string):any {
-    const headers = this.getHeadersWithCidName(cid, pname);
-    return this.http.post<any>('https://api.jsonbin.io/b', 
-    {"pname": pname,"pid":"pxxx","transactions":[],"cashbalance":0}
-    , { headers });
-  }
-  GetAllPortfolios( cid:string){
-    const headers = this.getHeaders();
-    return this.http.get<any>('https://api.jsonbin.io/e/collection/'+cid+'/all-bins'
-    , { headers });
-  }
+
+  // private getHeaders() {
+  //   return {
+  //     'Content-type': 'application/json'
+  //     , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
+  //   };
+  // }
+  // private getHeadersWithCidName(cid: string, bname: string) {
+  //   return {
+  //     'Content-type': 'application/json'
+  //     , 'secret-key': '$2b$10$MtAQYTJyUpsZKqF.Q52uXeE70uGnfBunk958TrWkT/thCpgaAJtq6'
+  //     , 'collection-id': cid
+  //     , name: bname
+  //   };
+  // }
+  // getUserCollectionId(uid: string): any {
+  //   return this.http.post<any>(
+  //     'https://userportfolio.azurewebsites.net/api/GetUserCollectionId?code=uhggnfyOftXrBnargecyMzLTa1eAD1dqaAlgQPBUcyhRJXmmVI62Dg==',
+  //     { userid: uid }
+  //   );
+  // }
+  // addUserToCollection(uid: string, cid: string): any {
+  //   return this.http.post<any>(
+  //     'https://userportfolio.azurewebsites.net/api/AddUserCollectionMapping?code=w7s/e7sthPgZaB1yR9gpsCsdaF6DHvEHa6wcLSNBksaiA1NgyKsssA==',
+  //     { uid, cid }
+  //   );
+  // }
+  // CreateNewCollection(id: string): any {
+  //   console.log(id);
+  //   const headers = this.getHeaders();
+  //   return this.http.post<any>('https://api.jsonbin.io/c',
+  //     { "name": id }
+  //     , { headers });
+  // }
+  // CreatePortfolio(pname: string, cid: string): any {
+  //   const headers = this.getHeadersWithCidName(cid, pname);
+  //   return this.http.post<any>('https://api.jsonbin.io/b',
+  //     { "pname": pname, "pid": "pxxx", "transactions": [], "cashbalance": 0 }
+  //     , { headers });
+  // }
+  // GetAllPortfolios(cid: string) {
+  //   const headers = this.getHeaders();
+  //   return this.http.get<any>('https://api.jsonbin.io/e/collection/' + cid + '/all-bins'
+  //     , { headers });
+  // }
   getPortfolio(portfolioId: string): Portfolio {
     return JSON.parse(localStorage.getItem('portfolio.' + portfolioId));
   }

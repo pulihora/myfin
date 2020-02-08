@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   FullName = '';
-  constructor(private authService:AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();

@@ -3,12 +3,12 @@ import * as jwt_decode from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { decode } from 'punycode';
 
-export const TOKEN_NAME: string = 'jwt_token';
+export const TOKEN_NAME = 'jwt_token';
 
 @Injectable()
 export class AuthService {
 
-  private url: string = 'api/auth';
+  private url = 'api/auth';
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) { }
@@ -27,27 +27,27 @@ export class AuthService {
   getTokenExpirationDate(token: string): Date {
     const decoded = jwt_decode(token);
 
-    if (decoded.exp === undefined) return null;
+    if (decoded.exp === undefined) { return null; }
 
-    const date = new Date(0); 
+    const date = new Date(0);
     date.setUTCSeconds(decoded.exp);
     return date;
   }
-  public getUserInfo():any{
+  public getUserInfo(): any{
     const decoded = jwt_decode(this.getToken());
     return decoded;
   }
   public isAuthenticated(): boolean {
     // Check whether the id_token is expired or not
-    console.log("isAuthenticated");
+    console.log('isAuthenticated');
     return !this.isTokenExpired(this.getToken());
   }
   isTokenExpired(token?: string): boolean {
-    if(!token) token = this.getToken();
-    if(!token) return true;
+    if(!token) { token = this.getToken(); }
+    if(!token) { return true; }
 
     const date = this.getTokenExpirationDate(token);
-    if(date === undefined) return false;
+    if(date === undefined) { return false; }
     return !(date.valueOf() > new Date().valueOf());
   }
 
