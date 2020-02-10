@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -10,9 +10,18 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   FullName = '';
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+    router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.renderHeader();
+      }
+    });
+   }
 
   ngOnInit() {
+    this.renderHeader();
+  }
+  private renderHeader() {
     this.isAuthenticated = this.authService.isAuthenticated();
     if (this.isAuthenticated) {
       this.FullName = '';
@@ -22,6 +31,7 @@ export class HeaderComponent implements OnInit {
       }
     }
   }
+
   logOut() {
     this.authService.logout();
     this.router.navigate(['/login']);

@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 @Component({
   selector: 'app-createportfolio',
   templateUrl: './createportfolio.component.html',
-  styles: []
+  styleUrls: ['./createportfolio.component.css']
 })
 export class CreateportfolioComponent implements OnInit {
 

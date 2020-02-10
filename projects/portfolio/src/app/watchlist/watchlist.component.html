@@ -2,13 +2,14 @@
 <span style="font-weight:bold;"> Total Value: {{MktTotl  + portfolio?.cashbalance | number:'.0-2'}} Cash Balance: {{ portfolio?.cashbalance | number:'.0-2'}} </span>
   <table style="width:99%;margin:auto;border:solid 1px">
   <tr style="width:100%;font-weight:bold;">
-  <td>Name</td>
-  <td>{{TotCost |  number:'.0-2'}}</td>
-  <td>{{TotGL | number:'.0-2'}}</td>
-   <td>Shares</td>
-   <td>Div.%</td>
-   <td>Price</td><td>{{MktTotl  | number:'.0-2'}}</td>
-  <td [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</td>
+  <td (click)="SortBy('name')">Name</td>
+  <td (click)="SortBy('totcost')">{{TotCost |  number:'.0-2'}}</td>
+  <td (click)="SortBy('totgl')">{{TotGL | number:'.0-2'}}</td>
+   <td (click)="SortBy('shares')">Shares</td>
+   <td (click)="SortBy('div')">Div.%</td>
+   <td (click)="SortBy('price')">Price</td>
+   <td (click)="SortBy('mkttot')">{{MktTotl  | number:'.0-2'}}</td>
+  <td  (click)="SortBy('dltot')" [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</td>
   </tr>
       <tr *ngFor="let pos of positions"
         [ngClass]="{'redbg': pos.shares * pos.latestInfo.change < 0, 'greenbg': pos.shares * pos.latestInfo.change > 0}">

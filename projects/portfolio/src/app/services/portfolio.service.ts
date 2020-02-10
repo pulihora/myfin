@@ -39,8 +39,17 @@ export class PortfolioService {
   getPortfolio(portfolioId: string) {
     return this.http.get<any>('https://api.myjson.com/bins/' + portfolioId);
   }
-  AddTransaction(portfolioId: string, trans: Transaction): Portfolio {
-    return null;
+  AddTransaction(portfolioId: string, portfolio: Portfolio, trans: Transaction) {
+    portfolio.transactions = portfolio.transactions || [];
+    portfolio.transactions.push(trans);
+    return this.http.put<any>('https://api.myjson.com/bins/' + portfolioId, portfolio);
+  }
+  uuidv4() {
+    return 'xxxxxxxx'.replace(/[xy]/g,
+      c => {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
   getCurrentPositions(portfolio: Portfolio): StockPosition[] {
     const positions: StockPosition[] = [];

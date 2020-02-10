@@ -1,6 +1,6 @@
-import { Component,EventEmitter, OnInit, Input, Output  } from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {NgForm} from '@angular/forms';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
+import { NgForm } from '@angular/forms';
 import { PortfolioService } from '../services/portfolio.service';
 
 @Component({
@@ -21,15 +21,15 @@ export class AddTransactionComponent implements OnInit {
 
   ngOnInit() {
   }
-AddTrans(){
-  let trans: Transaction = {
-      id:'txx',
+  AddTrans() {
+    const trans: Transaction = {
+      id: this.portfolioSrv.uuidv4(),
       date: new Date(this.tDate),
-  symbol: this.symbol,
-  quantity: this.quantity,
-  price: this.price,
-  transType: this.transType,
-  };  
-  this.portfolioUpdated.emit(this.portfolioSrv.AddTransaction(this.pid,trans));  
-}
+      symbol: this.symbol,
+      quantity: this.quantity,
+      price: this.price,
+      transType: this.transType,
+    };
+    this.portfolioUpdated.emit(trans);
+  }
 }

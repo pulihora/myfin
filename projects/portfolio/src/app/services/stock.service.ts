@@ -51,11 +51,19 @@ export class StockService {
       this.httpClient.get('https://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + combinedstocks + '&exthrs=1&output=json')
       .subscribe( (res: any) => {
         this.dataStore.stocks.forEach(stk =>{
-                let resSym = res.QuickQuoteResult.QuickQuote.find(stock => stock.symbol === stk.symbol);
+                const resSym = res.QuickQuoteResult.QuickQuote.find(stock => stock.symbol === stk.symbol);
                 if((stk.cur_price &&  stk.cur_price !== resSym.last) || stk.history_prices === null ){
                   stk.history_prices = stk.history_prices || [];
-                  let prevPrice : StockHistory = { date: new Date(), price: stk.cur_price};
-                  stk.history_prices.push(prevPrice);
+                  const prevPrice: StockHistory = { date: new Date(), price: stk.cur_price};
+                  if (stk && stk.history_prices) {
+                    if (stk.history_prices.length > 0 &&
+                          (stk.history_prices[stk.history_prices.length - 1].price !== prevPrice.price)
+                          ) {
+                      stk.history_prices.push(prevPrice);
+                    } else {
+                      stk.history_prices.push(prevPrice);
+                    }
+                  }
                 }
                 stk.cur_price = Number(resSym.last);
                 stk.change = resSym.change;
