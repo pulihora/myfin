@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -57,6 +58,7 @@ export function getAuthServiceConfigs() {
     HttpClientModule,
     FormsModule,
     NgxChartsModule,
+    AgGridModule.withComponents([]),
     ServicesModule.forRoot()
   ],
   providers: [AuthAPIService, UserService, AuthGuardService, AuthService,JwtHelperService, {

@@ -3,9 +3,9 @@ import { StockService } from '../services/stock.service';
 import { Observable } from 'rxjs';
 import { PortfolioService } from '../services/portfolio.service';
 import { ActivatedRoute } from '@angular/router';
-
-import * as $ from 'jquery';
+import { formatNumber } from '@angular/common';
 import * as CanvasJS from '../../assets/canvasjs.min';
+import { StockPosition } from '../models/StockPosition';
 
 @Component({
   selector: 'app-watchlist',
@@ -26,6 +26,29 @@ export class WatchlistComponent implements OnInit {
   MktTotl: number;
   TotGL: number;
   TotCost: number;
+
+  private gridApi;
+  private gridColumnApi;
+
+  columnDefs = [
+    {headerName: 'Name', field: 'latestInfo.company_name', sortable: true },
+    {headerName: 'Tot Cost', field: 'totCost' , valueFormatter: this.numFormatter, sortable: true},
+    {headerName: 'Tot G/L', field: 'totgl', sortable: true,
+                  valueGetter(params) { return params.data.totgl(); }, valueFormatter: this.numFormatter},
+    {headerName: 'Shares', field: 'shares', sortable: true},
+    {headerName: 'Div', field: 'latestInfo.dividendyield', valueFormatter: this.numFormatter, sortable: true},
+    {headerName: 'Price', field: 'latestInfo.cur_price', sortable: true},
+    {headerName: 'Mkt Val', field: 'mktval' , sortable: true,
+                  valueGetter(params) { return params.data.mktval(); }, valueFormatter: this.numFormatter},
+    {headerName: 'Daily G/L', field: 'dailygl', sortable: true,
+                  valueGetter(params) { return params.data.dailygl(); }, valueFormatter: this.numFormatter},
+  ];
+
+  rowData = [
+  ];
+   numFormatter(params) {
+     return formatNumber(params.value, 'en-US', '1.2-3');
+  }
   constructor(private stockService: StockService, private portfolioSrv: PortfolioService, private route: ActivatedRoute) {
 
   }
@@ -57,12 +80,16 @@ export class WatchlistComponent implements OnInit {
         this.positions = this.portfolioSrv.getCurrentPositions(portfolioData);
         this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
         this.stockService.getStocks().subscribe(stocks => {
-          console.log('adsadas');
           this.updateStockInfo(stocks);
         });
         this.stockService.startBOT();
       });
     });
+
+  }
+
+  onFirstDataRendered(params) {
+    params.api.sizeColumnsToFit();
   }
 
   updateChart() {
@@ -92,6 +119,7 @@ export class WatchlistComponent implements OnInit {
       this.TotGL += pos.latestInfo.cur_price * pos.shares - pos.totCost;
       this.TotCost += pos.totCost;
     });
+    this.rowData = this.positions;
     const date = new Date();
     this.dataPoints.push({
       x: new Date(date.setMonth(date.getMonth() + 8)),

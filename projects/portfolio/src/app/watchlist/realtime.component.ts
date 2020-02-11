@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { StockPosition } from '../models/StockPosition';
 
 @Component({
   selector: 'app-realtime',

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { StockPosition } from '../models/StockPosition';
 
 @Injectable({
   providedIn: 'root'
@@ -64,22 +65,20 @@ export class PortfolioService {
           symPos.totCost -= (trans.quantity * trans.price);
         }
       } else {
-        const newPos = {
-          symbol: trans.symbol,
-          shares: trans.quantity,
-          avgCost: 0,
-          totCost: trans.quantity * trans.price,
-          latestInfo: {
-            symbol: trans.symbol,
-            cur_price: 0,
-            change: 0,
-            changePer: 0,
-            dividendyield: 0,
-            history_prices: null,
-            company_name: ''
-          }
-        };
-
+        let newPos: StockPosition = new StockPosition();
+        newPos.symbol =  trans.symbol;
+        newPos.shares = trans.quantity;
+        newPos.avgCost = 0;
+        newPos.totCost = trans.quantity * trans.price;
+        newPos.latestInfo = {
+              symbol: trans.symbol,
+              cur_price: 0,
+              change: 0,
+              changePer: 0,
+              dividendyield: 0,
+              history_prices: null,
+              company_name: ''
+            };
         positions.push(newPos);
       }
     });
