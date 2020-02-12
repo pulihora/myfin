@@ -8,5 +8,5 @@ branches:
   - master
 before_script:
   - npm install -g @angular/cli
-script:no 
+script:
 - ng build --prod
