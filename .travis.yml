@@ -10,3 +10,11 @@ before_script:
   - npm install -g @angular/cli
 script:
 - ng build --prod
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/portfolio
+  on:
+    branch: master
