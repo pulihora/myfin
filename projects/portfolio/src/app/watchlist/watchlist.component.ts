@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { formatNumber } from '@angular/common';
 import * as CanvasJS from '../../assets/canvasjs.min';
 import { StockPosition } from '../models/StockPosition';
+import { GridOptions, GridOptionsWrapper } from 'ag-grid-community';
 
 @Component({
   selector: 'app-watchlist',
@@ -29,31 +30,50 @@ export class WatchlistComponent implements OnInit {
 
   private gridApi;
   private gridColumnApi;
-
+  public gridOptions: GridOptions;
   columnDefs = [
     {headerName: 'Name', field: 'latestInfo.company_name', sortable: true },
     {headerName: 'Tot Cost', field: 'totCost' , valueFormatter: this.numFormatter, sortable: true},
+    {headerName: 'Mkt Val', field: 'mktval' , sortable: true,
+                  valueGetter(params) { return params.data.mktval(); }, valueFormatter: this.numFormatter},
     {headerName: 'Tot G/L', field: 'totgl', sortable: true,
                   valueGetter(params) { return params.data.totgl(); }, valueFormatter: this.numFormatter},
     {headerName: 'Shares', field: 'shares', sortable: true},
-    {headerName: 'Div', field: 'latestInfo.dividendyield', valueFormatter: this.numFormatter, sortable: true},
+    {headerName: 'Div', field: 'latestInfo.dividendyield',
+                  valueGetter(params) { return (params.data.latestInfo.dividendyield ? params.data.latestInfo.dividendyield : 0) * 100; },
+                  valueFormatter: this.numFormatter, sortable: true},
     {headerName: 'Price', field: 'latestInfo.cur_price', sortable: true},
-    {headerName: 'Mkt Val', field: 'mktval' , sortable: true,
-                  valueGetter(params) { return params.data.mktval(); }, valueFormatter: this.numFormatter},
     {headerName: 'Daily G/L', field: 'dailygl', sortable: true,
-                  valueGetter(params) { return params.data.dailygl(); }, valueFormatter: this.numFormatter},
+                  valueGetter(params) { return params.data.dailygl(); }, valueFormatter: this.numFormatter,
+                  valueParser: this.numberParser,
+                  cellClassRules: {
+                    'rag-green': 'x > 0',
+                    'rag-red': 'x < 0'
+                  }
+                },
   ];
 
   rowData = [
   ];
    numFormatter(params) {
-     return formatNumber(params.value, 'en-US', '1.2-3');
+     return formatNumber(params.value, 'en-US', '1.2-2');
   }
   constructor(private stockService: StockService, private portfolioSrv: PortfolioService, private route: ActivatedRoute) {
 
   }
-
+  numberParser(params) {
+    const newValue = params.newValue;
+    let valueAsNumber;
+    if (newValue === null || newValue === undefined || newValue === '') {
+      valueAsNumber = null;
+    } else {
+      valueAsNumber = parseFloat(params.newValue);
+    }
+    return valueAsNumber;
+  }
   ngOnInit() {
+
+    this.gridOptions = { suppressHorizontalScroll:true};
     this.dataPoints = [];
     this.chart = new CanvasJS.Chart('chartContainer', {
       exportEnabled: true,
@@ -128,26 +148,7 @@ export class WatchlistComponent implements OnInit {
     console.log(this.dataPoints);
     this.dpsLength++;
     this.updateChart();
-    this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
-  }
-  SortBy(colname) {
-    if (colname === 'name' ) {
-      this.positions.sort((a, b) => a.latestInfo.company_name.localeCompare(b.latestInfo.company_name));
-    } else if (colname === 'totcost' ) {
-      this.positions.sort((a, b) => a.totCost - b.totCost);
-    } else if (colname === 'totgl' ) {
-      this.positions.sort((a, b) => (a.latestInfo.cur_price * a.shares - a.totCost) - (b.latestInfo.cur_price * b.shares - b.totCost));
-    } else if (colname === 'shares' ) {
-      this.positions.sort((a, b) => a.shares - b.shares);
-    } else if (colname === 'div' ) {
-      this.positions.sort((a, b) => (a.latestInfo.dividendyield || 0) - (b.latestInfo.dividendyield || 0));
-    } else if (colname === 'price' ) {
-      this.positions.sort((a, b) => a.latestInfo.cur_price - b.latestInfo.cur_price);
-    } else if (colname === 'mkttot' ) {
-      this.positions.sort((a, b) => (a.latestInfo.cur_price * a.shares) - (b.latestInfo.cur_price * b.shares));
-    } else if (colname === 'dltot' ) {
-      this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
-    }
+    // this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
   }
   updatePortfolio(eData) {
     console.log(eData);
