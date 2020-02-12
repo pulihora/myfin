@@ -46,6 +46,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "baseHref": "https://pulihora.github.io/myfin/",
               "budgets": [
                 {
                   "type": "initial",
