@@ -1,17 +1,20 @@
-
- <br/>
- <ng-container *ngIf="enableAdd">
+<br />
+<ng-container *ngIf="!enableAdd">
+  <div class="center-container">
+    <mat-progress-bar style="width:95%;margin: 0 auto;" mode="indeterminate"></mat-progress-bar>
+  </div></ng-container>
+<ng-container *ngIf="enableAdd">
   <mat-form-field class="example-full-width">
     <mat-label>New Portfolio Name</mat-label>
-    <input matInput placeholder="Portfolio Name" [(ngModel)]="portfolioName" >
+    <input matInput placeholder="Portfolio Name" [(ngModel)]="portfolioName">
   </mat-form-field>
-    <button mat-raised-button color="accent" (click)="CreatePortfolio()">
-      <mat-icon>add</mat-icon>
-    </button>
-
- </ng-container>
+  <button mat-raised-button color="accent" (click)="CreatePortfolio()">
+    <mat-icon>add</mat-icon>
+  </button>
+</ng-container>
 <div class="cards">
-  <mat-card class="pcard"  *ngFor="let p of portfolios" [routerLink]="['/portfolio', p.pUrl.replace('https://api.myjson.com/bins/','')]">
+  <mat-card class="pcard" *ngFor="let p of portfolios"
+    [routerLink]="['/portfolio', p.pUrl.replace('https://api.myjson.com/bins/','')]">
     {{ p.name }}
   </mat-card>
 </div>
