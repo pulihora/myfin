@@ -7,6 +7,8 @@ import { formatNumber } from '@angular/common';
 import * as CanvasJS from '../../assets/canvasjs.min';
 import { StockPosition } from '../models/StockPosition';
 import { GridOptions, GridOptionsWrapper } from 'ag-grid-community';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-watchlist',
@@ -14,9 +16,7 @@ import { GridOptions, GridOptionsWrapper } from 'ag-grid-community';
   styleUrls: ['./watchlist.component.css']
 })
 export class WatchlistComponent implements OnInit {
-  dataPoints: any;
-  dpsLength = 0;
-  chart: any;
+
   stocks: Observable<Stock[]>;
   portfolio: Portfolio;
   positions: StockPosition[];
@@ -55,6 +55,29 @@ export class WatchlistComponent implements OnInit {
 
   rowData = [
   ];
+  lineChartData: ChartDataSets[] = [
+    { data: [], label: 'Total' },
+  ];
+
+  lineChartLabels: Label[] = [];
+
+  lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false
+  };
+
+  lineChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(150,150,150,0.28)',
+    },
+  ];
+
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType = 'line';
+
+
    numFormatter(params) {
      return formatNumber(params.value, 'en-US', '1.2-2');
   }
@@ -72,26 +95,8 @@ export class WatchlistComponent implements OnInit {
     return valueAsNumber;
   }
   ngOnInit() {
-
+    
     this.gridOptions = { suppressHorizontalScroll:true};
-    this.dataPoints = [];
-    this.chart = new CanvasJS.Chart('chartContainer', {
-      exportEnabled: true,
-      title: {
-        text: 'Live Chart'
-      },
-      axisY: {
-        minimum: 0
-        //   maximum: 90
-      },
-      data: [{
-        type: 'splineArea',
-        color: 'rgba(54,158,173,.7)',
-        // xValueFormatString: "HH:mm",
-        dataPoints: this.dataPoints,
-      }]
-    });
-
     this.sub = this.route.params.subscribe(params => {
       this.pid = params.pid;
       this.portfolioSrv.getPortfolio(this.pid).subscribe(portfolioData => {
@@ -100,24 +105,6 @@ export class WatchlistComponent implements OnInit {
         this.positions = this.portfolioSrv.getCurrentPositions(portfolioData);
         this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
         this.stockService.getStocks().subscribe(stocks => {
-
-          this.chart = new CanvasJS.Chart('chartContainer', {
-            exportEnabled: true,
-            title: {
-              text: 'Live Chart'
-            },
-            axisY: {
-              minimum: this.TotCost - 200
-              //   maximum: 90
-            },
-            data: [{
-              type: 'splineArea',
-              color: 'rgba(54,158,173,.7)',
-              // xValueFormatString: "HH:mm",
-              dataPoints: this.dataPoints,
-            }]
-          });
-
           this.updateStockInfo(stocks);
         });
         this.stockService.startBOT();
@@ -128,11 +115,6 @@ export class WatchlistComponent implements OnInit {
 
   onFirstDataRendered(params) {
     params.api.sizeColumnsToFit();
-  }
-
-  updateChart() {
-    this.chart.axisY.minimum = this.TotCost - 200;
-    this.chart.render();
   }
   getMin(a) {
     if(a[0][0]){
@@ -159,13 +141,10 @@ export class WatchlistComponent implements OnInit {
     });
     this.rowData = this.positions;
     const date = new Date();
-    this.dataPoints.push({
-      x: new Date(date.setMonth(date.getMonth() + 8)),
-      y: (this.MktTotl + this.portfolio.cashbalance)
-    });
-    console.log(this.dataPoints);
-    this.dpsLength++;
-    this.updateChart();
+    this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance);
+    this.lineChartLabels.push(new Date().getHours() + ':' 
+                    +new Date().getMinutes() + ':' + new Date().getSeconds());
+    
     // this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
   }
   updatePortfolio(eData) {

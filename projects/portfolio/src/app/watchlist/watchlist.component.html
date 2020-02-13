@@ -1,4 +1,14 @@
-<div id="chartContainer" style="height: 100px; width: 100%; margin-left:auto;margin-right:auto;"></div>
+<div class="chart-wrapper" style="height: 150px">
+  <canvas baseChart
+      [datasets]="lineChartData" 
+      [labels]="lineChartLabels" 
+      [options]="lineChartOptions"
+      [colors]="lineChartColors" 
+      [legend]="lineChartLegend" 
+      [chartType]="lineChartType" 
+      [plugins]="lineChartPlugins">
+  </canvas>
+</div> <br>
 <span>
   <table style="width:100%">
     <tr><td>Total Value: {{MktTotl  + portfolio?.cashbalance | number:'.0-2'}}</td>
@@ -16,3 +26,5 @@
 <div style="width: 99%;margin:3px;">
   <app-add-transaction [pid]="pid" (portfolioUpdated)='updatePortfolio($event)'></app-add-transaction>
 </div>
+
+
