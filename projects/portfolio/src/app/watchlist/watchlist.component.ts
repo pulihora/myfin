@@ -63,6 +63,7 @@ export class WatchlistComponent implements OnInit {
   ];
   lineChartData: ChartDataSets[] = [
     { data: [], label: 'Total' },
+    { data: [], label: 'Previous Total' },
   ];
 
   lineChartLabels: Label[] = [];
@@ -74,9 +75,12 @@ export class WatchlistComponent implements OnInit {
 
   lineChartColors: Color[] = [
     {
-      borderColor: 'black',
-      backgroundColor: 'rgba(150,150,150,0.28)',
-    },
+      borderColor: 'green',
+      backgroundColor: 'rgba(0,150,0,0.28)',
+    }, {
+      borderColor: 'grey',
+      backgroundColor: 'rgba(150,0,0,0.28)',
+    }
   ];
 
   lineChartLegend = true;
@@ -137,11 +141,16 @@ export class WatchlistComponent implements OnInit {
     });
     this.rowData = this.positions;
     const date = new Date();
-    this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance);
+    this.lineChartData[1].data.push(this.MktTotl + this.portfolio.cashbalance + (this.DLTot * -1) );
+    this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance +  this.getRnd()  );
     this.lineChartLabels.push(new Date().getHours() + ':'
       + new Date().getMinutes() + ':' + new Date().getSeconds());
 
     // this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
+  }
+  getRnd(){
+    const mul = (new Date().getMinutes() % 2 === 0) ? 1 : -1;
+    return Math.random() * 1000 * mul;
   }
   updatePortfolio(eData) {
     console.log(eData);
