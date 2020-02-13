@@ -32,25 +32,31 @@ export class WatchlistComponent implements OnInit {
   private gridColumnApi;
   public gridOptions: GridOptions;
   columnDefs = [
-    {headerName: 'Name', field: 'latestInfo.company_name', sortable: true },
-    {headerName: 'Tot Cost', field: 'totCost' , valueFormatter: this.numFormatter, sortable: true},
-    {headerName: 'Mkt Val', field: 'mktval' , sortable: true,
-                  valueGetter(params) { return params.data.mktval(); }, valueFormatter: this.numFormatter},
-    {headerName: 'Tot G/L', field: 'totgl', sortable: true,
-                  valueGetter(params) { return params.data.totgl(); }, valueFormatter: this.numFormatter},
-    {headerName: 'Shares', field: 'shares', sortable: true},
-    {headerName: 'Div', field: 'latestInfo.dividendyield',
-                  valueGetter(params) { return (params.data.latestInfo.dividendyield ? params.data.latestInfo.dividendyield : 0) * 100; },
-                  valueFormatter: this.numFormatter, sortable: true},
-    {headerName: 'Price', field: 'latestInfo.cur_price', sortable: true},
-    {headerName: 'Daily G/L', field: 'dailygl', sortable: true,
-                  valueGetter(params) { return params.data.dailygl(); }, valueFormatter: this.numFormatter,
-                  valueParser: this.numberParser,
-                  cellClassRules: {
-                    'rag-green': 'x > 0',
-                    'rag-red': 'x < 0'
-                  }
-                },
+    { headerName: 'Name', field: 'latestInfo.company_name', sortable: true },
+    { headerName: 'Tot Cost', field: 'totCost', valueFormatter: this.numFormatter, sortable: true },
+    {
+      headerName: 'Mkt Val', field: 'mktval', sortable: true,
+      valueGetter(params) { return params.data.mktval(); }, valueFormatter: this.numFormatter
+    },
+    {
+      headerName: 'Tot G/L', field: 'totgl', sortable: true,
+      valueGetter(params) { return params.data.totgl(); }, valueFormatter: this.numFormatter
+    },
+    { headerName: 'Shares', field: 'shares', sortable: true },
+    {
+      headerName: 'Div', field: 'latestInfo.dividendyield',
+      valueGetter(params) { return (params.data.latestInfo.dividendyield ? params.data.latestInfo.dividendyield : 0) * 100; },
+      valueFormatter: this.numFormatter, sortable: true
+    },
+    { headerName: 'Price', field: 'latestInfo.cur_price', sortable: true },
+    {
+      headerName: 'Daily G/L', field: 'dailygl', sortable: true,
+      valueGetter(params) { return params.data.dailygl(); }, valueFormatter: this.numFormatter,
+      cellClassRules: {
+        'rag-green': 'x > 0',
+        'rag-red': 'x < 0'
+      }
+    },
   ];
 
   rowData = [
@@ -78,25 +84,15 @@ export class WatchlistComponent implements OnInit {
   lineChartType = 'line';
 
 
-   numFormatter(params) {
-     return formatNumber(params.value, 'en-US', '1.2-2');
+  numFormatter(params) {
+    return formatNumber(params.value, 'en-US', '1.2-2');
   }
   constructor(private stockService: StockService, private portfolioSrv: PortfolioService, private route: ActivatedRoute) {
 
   }
-  numberParser(params) {
-    const newValue = params.newValue;
-    let valueAsNumber;
-    if (newValue === null || newValue === undefined || newValue === '') {
-      valueAsNumber = null;
-    } else {
-      valueAsNumber = parseFloat(params.newValue);
-    }
-    return valueAsNumber;
-  }
   ngOnInit() {
-    
-    this.gridOptions = { suppressHorizontalScroll:true};
+
+    this.gridOptions = { suppressHorizontalScroll: true };
     this.sub = this.route.params.subscribe(params => {
       this.pid = params.pid;
       this.portfolioSrv.getPortfolio(this.pid).subscribe(portfolioData => {
@@ -117,7 +113,7 @@ export class WatchlistComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
   getMin(a) {
-    if(a[0][0]){
+    if (a[0][0]) {
       let min = a[0][0][1];
       for (const e of a[0]) {
         if (e[1] < min) {
@@ -142,17 +138,17 @@ export class WatchlistComponent implements OnInit {
     this.rowData = this.positions;
     const date = new Date();
     this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance);
-    this.lineChartLabels.push(new Date().getHours() + ':' 
-                    +new Date().getMinutes() + ':' + new Date().getSeconds());
-    
+    this.lineChartLabels.push(new Date().getHours() + ':'
+      + new Date().getMinutes() + ':' + new Date().getSeconds());
+
     // this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
   }
   updatePortfolio(eData) {
     console.log(eData);
-    this.portfolioSrv.AddTransaction(this.pid, this.portfolio, eData).subscribe( d => {
+    this.portfolioSrv.AddTransaction(this.pid, this.portfolio, eData).subscribe(d => {
       this.portfolio = d;
       this.positions = this.portfolioSrv.getCurrentPositions(d);
       this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
-    } );
+    });
   }
 }
