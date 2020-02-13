@@ -81,7 +81,7 @@ export class WatchlistComponent implements OnInit {
         text: 'Live Chart'
       },
       axisY: {
-        minimum: 377000
+        minimum: 0
         //   maximum: 90
       },
       data: [{
@@ -100,6 +100,24 @@ export class WatchlistComponent implements OnInit {
         this.positions = this.portfolioSrv.getCurrentPositions(portfolioData);
         this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
         this.stockService.getStocks().subscribe(stocks => {
+
+          this.chart = new CanvasJS.Chart('chartContainer', {
+            exportEnabled: true,
+            title: {
+              text: 'Live Chart'
+            },
+            axisY: {
+              minimum: this.TotCost - 200
+              //   maximum: 90
+            },
+            data: [{
+              type: 'splineArea',
+              color: 'rgba(54,158,173,.7)',
+              // xValueFormatString: "HH:mm",
+              dataPoints: this.dataPoints,
+            }]
+          });
+
           this.updateStockInfo(stocks);
         });
         this.stockService.startBOT();
@@ -113,7 +131,7 @@ export class WatchlistComponent implements OnInit {
   }
 
   updateChart() {
-    // this.chart.axisY = { minimum: this.getMin(this.dataPoints)};
+    this.chart.axisY.minimum = this.TotCost - 200;
     this.chart.render();
   }
   getMin(a) {
