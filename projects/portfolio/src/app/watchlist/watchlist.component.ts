@@ -7,8 +7,8 @@ import { formatNumber } from '@angular/common';
 import * as CanvasJS from '../../assets/canvasjs.min';
 import { StockPosition } from '../models/StockPosition';
 import { GridOptions, GridOptionsWrapper } from 'ag-grid-community';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { Color, Label, MultiDataSet } from 'ng2-charts';
 
 @Component({
   selector: 'app-watchlist',
@@ -88,6 +88,13 @@ export class WatchlistComponent implements OnInit {
   lineChartType = 'line';
 
 
+  public doughnutChartLabels: Label[] = [];
+  public doughnutChartData: MultiDataSet = [
+    []
+  ];
+  public doughnutChartType: ChartType = 'doughnut';
+  public doughnutBackgroundColors = [{backgroundColor: ['#e84351', '#434a54', '#3ebf9b', '#4d86dc', '#f3af37']}];
+
   numFormatter(params) {
     return formatNumber(params.value, 'en-US', '1.2-2');
   }
@@ -132,12 +139,20 @@ export class WatchlistComponent implements OnInit {
     this.MktTotl = 0;
     this.TotGL = 0;
     this.TotCost = 0;
+    this.doughnutChartData = [
+      []
+    ];
+    this.doughnutBackgroundColors[0].backgroundColor = [];
+    this.doughnutChartLabels = [];
     this.positions.forEach(pos => {
       pos.latestInfo = stocks.find(s => s.symbol === pos.symbol);
       this.DLTot += pos.shares * pos.latestInfo.change;
       this.MktTotl += pos.shares * pos.latestInfo.cur_price;
       this.TotGL += pos.latestInfo.cur_price * pos.shares - pos.totCost;
       this.TotCost += pos.totCost;
+      this.doughnutChartData[0].push(pos.shares * pos.latestInfo.cur_price);
+      this.doughnutBackgroundColors[0].backgroundColor.push(this.getRandomColor());
+      this.doughnutChartLabels.push(pos.symbol);
     });
     this.rowData = this.positions;
     const date = new Date();
@@ -148,7 +163,15 @@ export class WatchlistComponent implements OnInit {
 
     // this.positions.sort((a, b) => (a.shares * a.latestInfo.change) - (b.shares * b.latestInfo.change));
   }
-  getRnd(){
+  getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  getRnd() {
     const mul = (new Date().getMinutes() % 2 === 0) ? 1 : -1;
     return Math.random() * 1000 * mul;
   }

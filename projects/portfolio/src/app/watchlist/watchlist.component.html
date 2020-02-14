@@ -1,11 +1,11 @@
 <div class="chart-wrapper" style="height: 150px">
   <canvas baseChart
-      [datasets]="lineChartData" 
-      [labels]="lineChartLabels" 
+      [datasets]="lineChartData"
+      [labels]="lineChartLabels"
       [options]="lineChartOptions"
-      [colors]="lineChartColors" 
-      [legend]="lineChartLegend" 
-      [chartType]="lineChartType" 
+      [colors]="lineChartColors"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType"
       [plugins]="lineChartPlugins">
   </canvas>
 </div> <br>
@@ -16,7 +16,7 @@
       <td>Market Val.: {{MktTotl  | number:'.0-2'}}</td>
       <td>Total Cost Basis: {{TotCost |  number:'.0-2'}}</td>
       <td>Total GL: {{TotGL | number:'.0-2'}}</td>
-      <td>Dail GL:  {{DLTot  | number:'.0-2'}}</td>
+      <td>Dail GL:  <span [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</span></td>
     </tr>
   </table>
 </span> <br>
@@ -25,6 +25,16 @@
 
 <div style="width: 99%;margin:3px;">
   <app-add-transaction [pid]="pid" (portfolioUpdated)='updatePortfolio($event)'></app-add-transaction>
+</div>
+
+<div style="display: block;">
+  <canvas baseChart
+    [data]="doughnutChartData"
+    [labels]="doughnutChartLabels"
+    [chartType]="doughnutChartType"
+    [colors]="doughnutBackgroundColors"
+    >
+  </canvas>
 </div>
 
 
