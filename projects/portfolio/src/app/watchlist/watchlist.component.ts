@@ -157,7 +157,7 @@ export class WatchlistComponent implements OnInit {
     this.rowData = this.positions;
     const date = new Date();
     this.lineChartData[1].data.push(this.MktTotl + this.portfolio.cashbalance + (this.DLTot * -1) );
-    this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance +  this.getRnd()  );
+    this.lineChartData[0].data.push(this.MktTotl + this.portfolio.cashbalance  );
     this.lineChartLabels.push(new Date().getHours() + ':'
       + new Date().getMinutes() + ':' + new Date().getSeconds());
 
@@ -170,10 +170,6 @@ export class WatchlistComponent implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
-  getRnd() {
-    const mul = (new Date().getMinutes() % 2 === 0) ? 1 : -1;
-    return Math.random() * 1000 * mul;
   }
   updatePortfolio(eData) {
     console.log(eData);
