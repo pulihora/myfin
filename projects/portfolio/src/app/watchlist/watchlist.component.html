@@ -7,6 +7,16 @@
       [legend]="lineChartLegend"
       [chartType]="lineChartType"
       [plugins]="lineChartPlugins">
+  </canvas> <br>
+</div><div style="height: 150px">
+  <canvas baseChart
+      [datasets]="lineChartData2"
+      [labels]="lineChartLabels2"
+      [options]="lineChartOptions2"
+      [colors]="lineChartColors2"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType2"
+      [plugins]="lineChartPlugins2">
   </canvas>
 </div> <br>
 <span>
@@ -20,8 +30,8 @@
     </tr>
   </table>
 </span> <br>
-<ag-grid-angular #agGrid id="myGrid" style="height: 65%" class="ag-theme-balham" [rowData]="rowData"
-  [columnDefs]="columnDefs" (firstDataRendered)="onFirstDataRendered($event)" ></ag-grid-angular>
+<ag-grid-angular #agGrid id="myGrid" style="height: 65%" class="ag-theme-balham" [rowData]="rowData" [sideBar]="sideBar"
+  [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (firstDataRendered)="onFirstDataRendered($event)" ></ag-grid-angular>
 
 <div style="width: 99%;margin:3px;">
   <app-add-transaction [pid]="pid" (portfolioUpdated)='updatePortfolio($event)'></app-add-transaction>

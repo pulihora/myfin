@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { PortfolioService } from '../services/portfolio.service';
 import { ActivatedRoute } from '@angular/router';
 import { formatNumber } from '@angular/common';
-import * as CanvasJS from '../../assets/canvasjs.min';
 import { StockPosition } from '../models/StockPosition';
 import { GridOptions, GridOptionsWrapper } from 'ag-grid-community';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
@@ -31,8 +30,12 @@ export class WatchlistComponent implements OnInit {
   private gridApi;
   private gridColumnApi;
   public gridOptions: GridOptions;
+  sideBar;
+  defaultColDef;
   columnDefs = [
-    { headerName: 'Name', field: 'latestInfo.company_name', sortable: true },
+    { headerName: 'Name', field: 'latestInfo.company_name', sortable: true,
+        filter: 'agTextColumnFilter'
+    },
     { headerName: 'Tot Cost', field: 'totCost', valueFormatter: this.numFormatter, sortable: true },
     {
       headerName: 'Mkt Val', field: 'mktval', sortable: true,
@@ -58,12 +61,11 @@ export class WatchlistComponent implements OnInit {
       }
     },
   ];
-
   rowData = [
   ];
   lineChartData: ChartDataSets[] = [
-    { data: [], label: 'Total' },
-    { data: [], label: 'Previous Total' },
+    { data: [], fill: 'origin', label: 'Total' },
+    { data: [], fill: 'origin', label: 'Previous Total' },
   ];
 
   lineChartLabels: Label[] = [];
@@ -88,6 +90,34 @@ export class WatchlistComponent implements OnInit {
   lineChartType = 'line';
 
 
+
+  lineChartData2: ChartDataSets[] = [
+    { data: [], label: 'Total' }
+  ];
+
+  lineChartLabels2: Label[] = [];
+
+  lineChartOptions2 = {
+    responsive: true,
+    maintainAspectRatio: false
+  };
+
+  lineChartColors2: Color[] = [
+    {
+      borderColor: 'grey',
+      backgroundColor: 'rgba(200,200,200,0.28)',
+    }
+  ];
+
+  lineChartLegend2 = true;
+  lineChartPlugins2 = [];
+  lineChartType2 = 'line';
+
+
+
+
+
+
   public doughnutChartLabels: Label[] = [];
   public doughnutChartData: MultiDataSet = [
     []
@@ -104,6 +134,8 @@ export class WatchlistComponent implements OnInit {
   ngOnInit() {
 
     this.gridOptions = { suppressHorizontalScroll: true };
+    this.sideBar = 'filters';
+    this.defaultColDef = { filter: true };
     this.sub = this.route.params.subscribe(params => {
       this.pid = params.pid;
       this.portfolioSrv.getPortfolio(this.pid).subscribe(portfolioData => {
@@ -115,11 +147,25 @@ export class WatchlistComponent implements OnInit {
           this.updateStockInfo(stocks);
         });
         this.stockService.startBOT();
+        this.stockService.startHistoryBOT();
+        this.LoadHistory(portfolioData);
       });
     });
 
   }
-
+  LoadHistory(portfolioData: Portfolio) {
+    for(let i = 100; i >=0; i--) {
+      let todayDate = new Date();
+      let histDate = new Date();
+      histDate.setTime(todayDate.getTime() - (i * 24 * 3600000));
+      let testp = this.portfolioSrv.getPositionsOn(portfolioData, histDate );
+      if(this.stockService.getEODValue(testp, histDate) > 0) {
+        this.lineChartData2[0].data.push(this.stockService.getEODValue(testp, histDate));
+        this.lineChartLabels2.push( (histDate.getMonth() + 1) + '/' + histDate.getDate() );
+      }
+      // console.log(histDate + ' ' + this.stockService.getEODValue(testp, histDate));
+    }
+  }
   onFirstDataRendered(params) {
     params.api.sizeColumnsToFit();
   }
