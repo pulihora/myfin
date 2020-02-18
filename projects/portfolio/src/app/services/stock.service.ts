@@ -76,7 +76,7 @@ export class StockService {
     this.dataStore.stocks.forEach(this.delayLoop(this.getHistoricalData, 20000));
   }
   getHistoricalData(stock: Stock, hClient) {
-    const lsHistData = JSON.parse(localStorage.getItem(stock.symbol + '_100HIST'));
+    const lsHistData = JSON.parse(localStorage.getItem(stock.symbol + '_100HIST')) || [];
     const latestHistData =  lsHistData.find(sh => new Date(sh.date) < new Date());
     if (latestHistData && latestHistData.price > 0) {
       hClient.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='
