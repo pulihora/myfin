@@ -78,10 +78,22 @@ export class StockService {
   getHistoricalData(stock: Stock, hClient) {
     const lsHistData = JSON.parse(localStorage.getItem(stock.symbol + '_100HIST'));
     let latestHistData = null;
+    let loadHistData = true;
     if (lsHistData) {
-      latestHistData =  lsHistData.find(sh => new Date(sh.date) < new Date());
+
+      let todayDate = new Date();
+      latestHistData =  lsHistData.find(sh => ( new Date(sh.date).getDate() === todayDate.getDate()
+                                                && new Date(sh.date).getMonth() === todayDate.getMonth()
+                                                && new Date(sh.date).getFullYear() === todayDate.getFullYear()
+                                              )
+                                        );
+      if(latestHistData && latestHistData.price > 0) {
+        loadHistData = false;
+        console.log(stock.symbol + ' hist data found and price exist');
+      }
     }
-    if (!(latestHistData && latestHistData.price > 0)) {
+    if (loadHistData) {
+      console.log();
       hClient.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='
       + stock.symbol.replace('.', '-') + '&apikey=O22XVPSPMRTX7OGT')
       .subscribe((res: any) => {

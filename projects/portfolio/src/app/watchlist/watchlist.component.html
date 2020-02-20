@@ -19,17 +19,16 @@
       [plugins]="lineChartPlugins2">
   </canvas>
 </div> <br>
-<span>
-  <table style="width:100%">
-    <tr><td>Total Value: {{MktTotl  + portfolio?.cashbalance | number:'.0-2'}}</td>
-      <td>Cash Balance: {{ portfolio?.cashbalance | number:'.0-2'}}</td>
-      <td>Market Val.: {{MktTotl  | number:'.0-2'}}</td>
-      <td>Total Cost Basis: {{TotCost |  number:'.0-2'}}</td>
-      <td>Total GL: {{TotGL | number:'.0-2'}}</td>
-      <td>Dail GL:  <span [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</span></td>
-    </tr>
-  </table>
-</span> <br>
+<ul class="flex-container wrap">
+  <li class="flex-item">Total Value: {{MktTotl  + portfolio?.cashbalance | number:'.0-2'}}</li>
+  <li class="flex-item">Cash Balance: {{ portfolio?.cashbalance | number:'.0-2'}}</li>
+  <li class="flex-item">Market Val.: {{MktTotl  | number:'.0-2'}}</li>
+  <li class="flex-item">Total Cost Basis: {{TotCost |  number:'.0-2'}}</li>
+  <li class="flex-item">Total GL: {{TotGL | number:'.0-2'}}</li>
+  <li class="flex-item">Dail GL:  <span [ngClass]="{'redtext': DLTot < 0, 'greentext': DLTot > 0}">{{DLTot  | number:'.0-2'}}</span></li>
+
+</ul>
+
 <ag-grid-angular #agGrid id="myGrid" style="height: 65%" class="ag-theme-balham" [rowData]="rowData" [sideBar]="sideBar"
   [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (firstDataRendered)="onFirstDataRendered($event)" ></ag-grid-angular>
 

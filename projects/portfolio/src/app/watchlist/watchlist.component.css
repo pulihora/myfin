@@ -3,3 +3,47 @@
 
 .redbg { background:#FFEEEE; }
 .greenbg { background:#EEFFEE; }
+
+.flex-container {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border: 1px solid silver;
+  -ms-box-orient: horizontal;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.nowrap  {
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+
+.wrap    {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.wrap li {
+  background: rgb(243, 237, 204);
+}
+
+.wrap-reverse         {
+  -webkit-flex-wrap: wrap-reverse;
+  flex-wrap: wrap-reverse;
+}
+.wrap-reverse li {
+  background: deepskyblue;
+}
+
+.flex-item {
+  padding: 5px;
+  margin: 10px;
+
+  font-weight: bold;
+  font-size: 1em;
+  text-align: center;
+}
