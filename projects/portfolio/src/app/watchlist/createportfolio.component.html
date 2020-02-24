@@ -1,8 +1,9 @@
-<br />
+<span *ngIf="!enableAdd" style="width:100%;align-items: center;text-align: center;">{{statusText}}</span>
 <ng-container *ngIf="!enableAdd">
   <div class="center-container">
     <mat-progress-bar style="width:95%;margin: 0 auto;" mode="indeterminate"></mat-progress-bar>
-  </div></ng-container>
+  </div>
+</ng-container>
 <ng-container *ngIf="enableAdd">
   <mat-form-field class="example-full-width">
     <mat-label>New Portfolio Name</mat-label>

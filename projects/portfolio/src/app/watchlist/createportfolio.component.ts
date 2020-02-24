@@ -17,10 +17,12 @@ export class CreateportfolioComponent implements OnInit {
   enableAdd = false;
   portfolioUrl = '';
   portfolioName = '';
+  statusText = '';
   ngOnInit() {
     const usrInfo = this.authService.getUserInfo();
-
+    this.statusText = 'Getting portfolio url';
     this.pSrv.getPortfolioUrl(usrInfo.email).subscribe(data => {
+      this.statusText = 'Loading portfolio data';
       this.portfolioUrl = data.portfolio_url;
       console.log(data); // load portfolio from data.uri
       this.LoadPortfolios(data.portfolio_url);
