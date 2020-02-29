@@ -11,7 +11,7 @@ export class PortfolioService {
 
   getPortfolioUrl(uid: string) {
     return this.http.post<any>(
-      'https://userportfolio.azurewebsites.net/api/GetMyPortfoliosUrl?code=wE7l3brjnAuqTa53qikh/U6aq7Q0nf9Sdd2Ia510vgbBIsTHyvcimA==',
+      'https://us-central1-gold-vault-269700.cloudfunctions.net/GetMyPortfoliosURI',
       { uid }
     );
   }

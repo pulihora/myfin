@@ -1,0 +1,50 @@
+#r "Newtonsoft.Json"
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+public class UserMap {
+        [JsonProperty("uid")]
+        public string uid { get; set; }
+        [JsonProperty("portfolio_url")]
+        public string portfolio_url { get; set; }
+}
+public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
+{
+   log.LogInformation("C# HTTP trigger function processed a request.");  
+
+    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+    dynamic data = JsonConvert.DeserializeObject(requestBody);
+    string uid = data?.uid;
+    string portfolio_url = data?.portfolio_url;
+
+    string resultContent = "";
+    using (var client = new HttpClient())
+    {        
+        client.BaseAddress = new Uri("https://api.myjson.com/bins/f9zfk");
+        
+        var result = await client.GetAsync("");
+        resultContent = await result.Content.ReadAsStringAsync();
+        
+        List<UserMap> users = JsonConvert.DeserializeObject<List<UserMap>>(await result.Content.ReadAsStringAsync());
+
+        users.Add(new UserMap { uid = uid, portfolio_url = portfolio_url });
+
+        var myContent = JsonConvert.SerializeObject(users);
+        var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+        var byteContent = new ByteArrayContent(buffer);
+        byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        var putresult = await client.PutAsync("" , byteContent);
+        if (result.IsSuccessStatusCode) {
+           return (ActionResult)new OkObjectResult(new { message = "success" }); 
+        } else {
+            return (ActionResult)new NotFoundResult(); 
+        }
+    }
+   }
