@@ -136,17 +136,20 @@ export class StockService {
                 }
               }
             }
-            if (resSym.curmktstatus === 'POST_MKT') {
-              stk.cur_price = Number(resSym.todays_closing);
-            } else {
+            // if (resSym.curmktstatus === 'POST_MKT') {
+            //   stk.cur_price = Number(resSym.todays_closing);
+            // } else {
+            //   stk.cur_price = Number(resSym.last);
+            // }
+            if (resSym) {
               stk.cur_price = Number(resSym.last);
+              stk.change = resSym.change;
+              stk.changePer = resSym.change_pct;
+              if (resSym.FundamentalData) {
+                stk.dividendyield = resSym.FundamentalData.dividendyield;
+              }
+              stk.company_name = resSym.name;
             }
-            stk.change = resSym.change;
-            stk.changePer = resSym.change_pct;
-            if (resSym.FundamentalData) {
-              stk.dividendyield = resSym.FundamentalData.dividendyield;
-            }
-            stk.company_name = resSym.name;
           }
           );
           localStorage.setItem('stocksDS', JSON.stringify(this.dataStore));
