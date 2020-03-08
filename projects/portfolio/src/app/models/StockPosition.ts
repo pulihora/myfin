@@ -5,6 +5,7 @@ export class StockPosition {
   public avgCost: number;
   public totCost: number;
   public latestInfo: Stock;
+  public transactions: Transaction[];
   public totgl(): number {
     return this.mktval() - this.totCost;
   }

@@ -62,10 +62,13 @@ export class PortfolioService {
         const multiplier = (trans.transType === 'BUY') ? 1 : -1;
         symPos.shares = Number(symPos.shares) + (Number(trans.quantity) * multiplier);
         symPos.totCost = symPos.totCost + (trans.quantity * trans.price * multiplier);
+        symPos.transactions.push(trans);
       } else {
         let newPos: StockPosition = new StockPosition();
         newPos.symbol =  trans.symbol;
         newPos.shares = trans.quantity;
+        newPos.transactions =[];
+        newPos.transactions.push(trans);
         newPos.avgCost = 0;
         newPos.totCost = trans.quantity * trans.price;
         newPos.latestInfo = {
@@ -94,12 +97,15 @@ export class PortfolioService {
           symPos.shares = Number(symPos.shares) - Number(trans.quantity);
           symPos.totCost -= (trans.quantity * trans.price);
         }
+        symPos.transactions.push(trans);
       } else {
         let newPos: StockPosition = new StockPosition();
         newPos.symbol =  trans.symbol;
         newPos.shares = trans.quantity;
         newPos.avgCost = 0;
         newPos.totCost = trans.quantity * trans.price;
+        newPos.transactions =[];
+        newPos.transactions.push(trans);
         newPos.latestInfo = {
               symbol: trans.symbol,
               cur_price: 0,

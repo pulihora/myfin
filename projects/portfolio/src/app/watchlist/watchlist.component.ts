@@ -34,6 +34,7 @@ export class WatchlistComponent implements OnInit {
   defaultColDef;
   columnDefs = [
     { headerName: 'Name', field: 'latestInfo.company_name', sortable: true,
+    valueGetter(params) { return params.data.transactions.length + ' ' + params.data.latestInfo.company_name ; },
         filter: 'agTextColumnFilter'
     },
     { headerName: 'Tot Cost', field: 'totCost', valueFormatter: this.numFormatter, sortable: true },
@@ -142,6 +143,7 @@ export class WatchlistComponent implements OnInit {
         console.log(portfolioData);
         this.portfolio = portfolioData;
         this.positions = this.portfolioSrv.getCurrentPositions(portfolioData);
+        console.log(this.positions);
         this.stockService.loadStocks(this.positions.map(ele => ele.symbol));
         this.stockService.getStocks().subscribe(stocks => {
           this.updateStockInfo(stocks);

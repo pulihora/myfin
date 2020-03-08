@@ -14,4 +14,5 @@ interface Transaction {
   quantity: number;
   price: number;
   transType: string;
+  sell_price: number;
 }

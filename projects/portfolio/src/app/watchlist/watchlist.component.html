@@ -1,4 +1,4 @@
-<div class="chart-wrapper" style="height: 150px">
+<!-- <div class="chart-wrapper" style="height: 150px">
   <canvas baseChart
       [datasets]="lineChartData"
       [labels]="lineChartLabels"
@@ -8,7 +8,8 @@
       [chartType]="lineChartType"
       [plugins]="lineChartPlugins">
   </canvas> <br>
-</div><div style="height: 150px">
+</div> -->
+<div style="height: 150px">
   <canvas baseChart
       [datasets]="lineChartData2"
       [labels]="lineChartLabels2"
@@ -29,8 +30,11 @@
 
 </ul>
 
-<ag-grid-angular #agGrid id="myGrid" style="height: 65%" class="ag-theme-balham" [rowData]="rowData" [sideBar]="sideBar"
-  [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (firstDataRendered)="onFirstDataRendered($event)" ></ag-grid-angular>
+<ag-grid-angular #agGrid id="myGrid" style="height: 65%" class="ag-theme-balham" [rowData]="rowData"
+ [sideBar]="sideBar"  [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" 
+ (firstDataRendered)="onFirstDataRendered($event)" ></ag-grid-angular>
+
+
 
 <div style="width: 99%;margin:3px;">
   <app-add-transaction [pid]="pid" (portfolioUpdated)='updatePortfolio($event)'></app-add-transaction>
